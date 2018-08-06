@@ -1,5 +1,4 @@
 (function () {
-    
     // Components
     const inputMin = document.getElementById('inputMin'), // Input Min
           textMin = document.getElementById('textMin'); // Text error msg min
@@ -24,21 +23,18 @@
     const lifesQuantity = document.getElementById('lifesQuantity'); // Oh!, try again, you still have 1/2 life/s
     const numberResult = document.getElementById('numberResult'); //  The number was ...
 
-
     let result, min = 0, max = 0;
 
-    // Reset min and max values from the min and max inputs;
-    const minValue = 1,
-          maxValue = 999999;
+    // Reset min values from the min and max inputs;
+    const minValue = 1;
 
-    let lifes = 3
+    let lifes = 3;
     lifesText.textContent = `Lifes: ${lifes}`
 
     inputMin.setAttribute('min', `${minValue}`);
     inputMax.setAttribute('min', `${minValue}`);
-    inputMin.setAttribute('max', `${maxValue}`);
-    inputMax.setAttribute('max', `${maxValue}`);
 
+    // Object State
     let state = {
         minCamp: false,
         minCampCero: false,
@@ -49,6 +45,7 @@
         finalResult: false
     }
 
+    // Error and Valid fields functions
     let minCampError = function () {
         inputMin.classList.add('input-error');
         textMin.classList.add('text-error');
@@ -97,6 +94,14 @@
         textResult.classList.remove('text-error');
     }
 
+    // Probability Function
+    let probabilityFunction = function () {
+        probability = lifes * 100 / (interval + 1);
+        probability = probability.toFixed(3)
+
+        return probability;
+    }
+
     // Generate random num
     let functionRandom = function () {
 
@@ -105,12 +110,12 @@
 
         lifes = 3;
         interval = max - min;
-        probability = lifes * 100 / (interval + 1);
-        probability = probability.toFixed(2)
+
+        probabilityFunction();
 
         // Min Camp
         state.minCamp = (!inputMin.value.length) ? true : false;
-        state.minCampCero = (!min) ? true : false;
+        state.minCampCero = (min <= 0) ? true : false;
         if (state.minCamp) {
             minCampError();
             textMin.textContent = 'Complete the field!';
@@ -122,10 +127,9 @@
             textMin.textContent = '';
         }
 
-
         // Max Camp
         state.maxCamp = (!inputMax.value.length) ? true : false;
-        state.maxCampCero = (!max) ? true : false;
+        state.maxCampCero = (max <= 0) ? true : false;
         if (state.maxCamp) {
             maxCampError();
             textMax.textContent = 'Complete the field!';
@@ -137,12 +141,13 @@
             textMax.textContent = '';
         }
 
-        state.validMinMaxValue = (max - min < 5) ? true : false;
-        if (!state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero && state.validMinMaxValue) {
+        // Min and Max field valid interval values
+        state.validMinMaxValue = (max - min < 5 && !state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero) ? true : false;
+        if (state.validMinMaxValue) {
             minCampError();
             maxCampError();
             textInterval.textContent = 'The interval must be greater than 5!';
-        } else if (!state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero && !state.validMinMaxValue) {
+        } else {
             textInterval.textContent = '';
             (interval <= 10 ) ? difficultyText.textContent = `Difficulty: Very Easy` :
             (interval <= 30 ) ? difficultyText.textContent = `Difficulty: Easy` :
@@ -153,99 +158,85 @@
             difficultyText.textContent = `Difficulty: -`
 
             probabiltyText.textContent = `Probabilty of Winning: ${probability}%`;
-
-        } else if (!state.validMinMaxValue) {
             textInterval.textContent = '';
-        }
+            inputResult.setAttribute('min', `${min}`)
+            inputResult.setAttribute('max', `${max}`)
+            resultCampValid();
+            inputResult.value = '';
+            textResult.textContent = '';
 
-
-    
-        inputResult.setAttribute('min', `${min}`)
-        inputResult.setAttribute('max', `${max}`)
-        inputResult.value = '';
-
-        const randomNum = (min, max) => Math.floor( ( Math.random() * ( max - min + 1 ) ) + min );
-    
+            const randomNum = (min, max) => Math.floor( ( Math.random() * ( max - min + 1 ) ) + min );
         
-        result = randomNum(min, max);
-
-        (result === 0) ? result++ : false;
-
-        return (!state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero && !state.validMinMaxValue) ? result : false;
-
+            result = (!state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero && !state.validMinMaxValue) ? randomNum(min, max) : false;
+        } 
+        return (result !== false) ? result : false;
     }
 
     // Validation of random num
     let functionResult = function () {
         min = parseInt(inputMin.value);
         max = parseInt(inputMax.value);
+        let resultValue = parseInt(inputResult.value);
+        let finalResult = (resultValue === result) ? true : false;
 
-        resultValue = parseInt(inputResult.value);
-
-        let finalResult = (resultValue == result) ? true : false;
-
-        if (resultValue < min || resultValue > max) {
+        if (state.minCamp || state.minCampCero || state.maxCamp || state.maxCampCero || state.validMinMaxValue) {
+            resultCampError();
+            textResult.textContent = `Add a New Interval!`;
+        } else if (resultValue < min || resultValue > max) {
             resultCampError();
             textResult.textContent = `You must enter a number between ${min} and ${max}!`;
-        } else if (inputResult.value.length === 0 ) {
+        } else if (!inputResult.value.length) {
             resultCampError();
             textResult.textContent = `Complete the field!`;
         } else if (!inputMin.value || !inputMax.value) {
             resultCampError();
             textResult.textContent = `Complete the min and max camps first!`;
-        } else if(result === undefined || result === NaN || result === null) {
+        } else if(result === undefined || result === NaN || result === null || state.minCamp || state.minCampCero || state.maxCamp || state.maxCampCero || state.validMinMaxValue) {
             return false;
         } else {
             resultCampValid();
             textResult.textContent = '';
-            if (finalResult) {
-                gameResult.style.setProperty('color', '#23C040');
-                lifesQuantity.textContent = '';
-                numberResult.textContent = '';
 
+            let disabledFunction = function () {
                 inputMin.setAttribute('disabled', 'disabled');
                 inputMax.setAttribute('disabled', 'disabled');
                 inputResult.setAttribute('disabled', 'disabled');
                 buttonReset.setAttribute('disabled', 'disabled');
                 buttonResult.setAttribute('disabled', 'disabled');
+                lifesQuantity.textContent = '';
                 buttonNewGame.style.setProperty('display', 'block');
+            }
+
+            if (finalResult) {
+                gameResult.style.setProperty('color', '#23C040');
+                numberResult.textContent = '';
+                disabledFunction();
 
                 return gameResult.textContent = 'Victory!';
-
             } else {
                 lifes--;
                 lifesText.textContent = `Lifes: ${lifes}`
                 if (lifes === 0) {
-                    inputMin.setAttribute('disabled', 'disabled');
-                    inputMax.setAttribute('disabled', 'disabled');
-                    inputResult.setAttribute('disabled', 'disabled');
-                    buttonReset.setAttribute('disabled', 'disabled');
-                    buttonResult.setAttribute('disabled', 'disabled');
                     gameResult.style.setProperty('color', '#F53040');
+                    numberResult.textContent= `The number was ${result}`;
+                    disabledFunction();
 
-                    functionReturn = function () {
-                        gameResult.textContent = `Game Over!`;
-                        numberResult.textContent= `The number was ${result}`;
-                        lifesQuantity.textContent = '';
-                        buttonNewGame.style.setProperty('display', 'block');
-                    }
-
-                    return functionReturn();
+                    return gameResult.textContent = `Game Over!`;;
                 } else {
-                    probability = lifes * 100 / (interval + 1);
-                    probability = probability.toFixed(3);
+                    probabilityFunction();
                     probabiltyText.textContent = `Probabilty of Winning: ${probability}%`;
 
                     return (lifes === 1) ? lifesQuantity.textContent = `Oh!, try again, you still have ${lifes} life` : lifesQuantity.textContent = `Oh!, try again, you still have ${lifes} lifes`;
-                }
-                
+                } 
             }   
         }
-
     }
  
     // Reset values
     let functionNewGame = function() {
+        result = false;
+        state.minCamp = true;
+        state.maxCamp = true;
         inputMin.value = '';
         inputMax.value = '';
         inputResult.value = '';
@@ -259,8 +250,8 @@
         lifesQuantity.textContent = '';
         difficultyText.textContent = 'Difficulty: -';
         lifesText.textContent = 'Lifes: 3';
+        probabiltyText.textContent = 'Probability of Winning: -';
         numberResult.textContent = '';
-        probabiltyText.textContent = 'Probability of Winning: -'
 
         inputMin.removeAttribute('disabled');
         inputMax.removeAttribute('disabled');
@@ -268,12 +259,9 @@
         buttonReset.removeAttribute('disabled');
         buttonResult.removeAttribute('disabled');
         buttonNewGame.style.setProperty('display', 'none');
-
     }
 
     buttonReset.addEventListener('click', functionRandom);
     buttonResult.addEventListener('click', functionResult);
-    buttonNewGame.addEventListener('click', functionNewGame);
-
-    
+    buttonNewGame.addEventListener('click', functionNewGame);    
 })();
