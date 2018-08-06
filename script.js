@@ -24,6 +24,7 @@
     const numberResult = document.getElementById('numberResult'); //  The number was ...
 
     let result, min = 0, max = 0;
+    let failedAttempts = []
 
     // Reset min values from the min and max inputs;
     const minValue = 1;
@@ -46,12 +47,14 @@
     }
 
     // Error and Valid fields functions
-    let minCampError = function () {
+    let minCampError = function (msg) {
         inputMin.classList.add('input-error');
         textMin.classList.add('text-error');
 
         inputMin.classList.remove('input-valid');
         textMin.classList.remove('text-valid');
+
+        textMin.textContent = `${msg}`;
     }
 
     let minCampValid = function () {
@@ -60,14 +63,18 @@
 
         inputMin.classList.remove('input-error');
         textMin.classList.remove('text-error');
+
+        textMin.textContent = '';
     }
 
-    let maxCampError = function () {
+    let maxCampError = function (msg) {
         inputMax.classList.add('input-error');
         textMax.classList.add('text-error');
 
         inputMax.classList.remove('input-valid');
         textMax.classList.remove('text-valid');
+
+        textMax.textContent = `${msg}`;
     }
 
     let maxCampValid = function () {
@@ -76,14 +83,18 @@
 
         inputMax.classList.remove('input-error');
         textMax.classList.remove('text-error');
+
+        textMax.textContent = '';
     }
 
-    let resultCampError = function () {
+    let resultCampError = function (msg) {
         inputResult.classList.add('input-error');
         textResult.classList.add('text-error');
 
         inputResult.classList.remove('input-valid');
         textResult.classList.remove('text-valid');
+
+        textResult.textContent = `${msg}`;
     }
 
     let resultCampValid = function () {
@@ -92,6 +103,8 @@
 
         inputResult.classList.remove('input-error');
         textResult.classList.remove('text-error');
+
+        textResult.textContent = '';
     }
 
     // Probability Function
@@ -116,38 +129,25 @@
         // Min Camp
         state.minCamp = (!inputMin.value.length) ? true : false;
         state.minCampCero = (min <= 0) ? true : false;
-        if (state.minCamp) {
-            minCampError();
-            textMin.textContent = 'Complete the field!';
-        } else if (state.minCampCero) { 
-            minCampError();
-            textMin.textContent = 'You must enter a number greater than 0!';
-        } else {
-            minCampValid();
-            textMin.textContent = '';
-        }
+        (state.minCamp) ? minCampError('Complete the field!') :
+        (state.minCampCero) ?  minCampError('You must enter a number greater than 0!') :
+        minCampValid();
+   
 
         // Max Camp
         state.maxCamp = (!inputMax.value.length) ? true : false;
         state.maxCampCero = (max <= 0) ? true : false;
-        if (state.maxCamp) {
-            maxCampError();
-            textMax.textContent = 'Complete the field!';
-        } else if (state.maxCampCero) { 
-            maxCampError();
-            textMax.textContent = 'You must enter a number greater than 0!';
-        } else {
-            maxCampValid();
-            textMax.textContent = '';
-        }
-
+        (state.maxCamp) ?  maxCampError('Complete the field!') :
+        (state.maxCampCero) ?  maxCampError('You must enter a number greater than 0!') :
+        maxCampValid();
+           
         // Min and Max field valid interval values
         state.validMinMaxValue = (max - min < 5 && !state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero) ? true : false;
         if (state.validMinMaxValue) {
-            minCampError();
-            maxCampError();
+            minCampError('');
+            maxCampError('');
             textInterval.textContent = 'The interval must be greater than 5!';
-        } else {
+        } else if (!state.validMinMaxValue && !state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero) {
             textInterval.textContent = '';
             (interval <= 10 ) ? difficultyText.textContent = `Difficulty: Very Easy` :
             (interval <= 30 ) ? difficultyText.textContent = `Difficulty: Easy` :
@@ -155,48 +155,39 @@
             (interval <= 500 ) ? difficultyText.textContent = `Difficulty: Hard` :
             (interval <= 1000 ) ? difficultyText.textContent = `Difficulty: Very Hard` :
             (interval > 1000) ? difficultyText.textContent = `Difficulty: Impossible`:
-            difficultyText.textContent = `Difficulty: -`
+            difficultyText.textContent = `Difficulty: -`;
 
-            probabiltyText.textContent = `Probabilty of Winning: ${probability}%`;
+            probabiltyText.textContent = `Probabilty of Winning: ${probability}%`; 
+
             textInterval.textContent = '';
             inputResult.setAttribute('min', `${min}`)
             inputResult.setAttribute('max', `${max}`)
             resultCampValid();
             inputResult.value = '';
-            textResult.textContent = '';
 
             const randomNum = (min, max) => Math.floor( ( Math.random() * ( max - min + 1 ) ) + min );
         
             result = (!state.minCamp && !state.minCampCero && !state.maxCamp && !state.maxCampCero && !state.validMinMaxValue) ? randomNum(min, max) : false;
         } 
+        
         return (result !== false) ? result : false;
     }
 
-    // Validation of random num
-    let functionResult = function () {
+     // Validation of random num
+     let functionResult = function () {
         min = parseInt(inputMin.value);
         max = parseInt(inputMax.value);
         let resultValue = parseInt(inputResult.value);
         let finalResult = (resultValue === result) ? true : false;
 
-        if (state.minCamp || state.minCampCero || state.maxCamp || state.maxCampCero || state.validMinMaxValue) {
-            resultCampError();
-            textResult.textContent = `Add a New Interval!`;
-        } else if (resultValue < min || resultValue > max) {
-            resultCampError();
-            textResult.textContent = `You must enter a number between ${min} and ${max}!`;
-        } else if (!inputResult.value.length) {
-            resultCampError();
-            textResult.textContent = `Complete the field!`;
-        } else if (!inputMin.value || !inputMax.value) {
-            resultCampError();
-            textResult.textContent = `Complete the min and max camps first!`;
-        } else if(result === undefined || result === NaN || result === null || state.minCamp || state.minCampCero || state.maxCamp || state.maxCampCero || state.validMinMaxValue) {
-            return false;
-        } else {
+        (state.minCamp || state.minCampCero || state.maxCamp || state.maxCampCero || state.validMinMaxValue) ? resultCampError('Add a New Interval!') :
+        (resultValue < min || resultValue > max) ? resultCampError(`You must enter a number between ${min} and ${max}!`) :
+        (!inputResult.value.length) ? resultCampError('Complete the field!'):
+        (!inputMin.value || !inputMax.value) ? resultCampError('Complete the min and max camps first!') :
+        (result === undefined || result === NaN || result === null || state.minCamp || state.minCampCero || state.maxCamp || state.maxCampCero || state.validMinMaxValue) ? false :
+        (resultValue === failedAttempts[0] || resultValue === failedAttempts[1]) ? resultCampError('You have already tried with that number!') :
+        (function (){
             resultCampValid();
-            textResult.textContent = '';
-
             let disabledFunction = function () {
                 inputMin.setAttribute('disabled', 'disabled');
                 inputMax.setAttribute('disabled', 'disabled');
@@ -215,7 +206,9 @@
                 return gameResult.textContent = 'Victory!';
             } else {
                 lifes--;
-                lifesText.textContent = `Lifes: ${lifes}`
+                interval--;
+                lifesText.textContent = `Lifes: ${lifes}`;
+                failedAttempts.push(resultValue);
                 if (lifes === 0) {
                     gameResult.style.setProperty('color', '#F53040');
                     numberResult.textContent= `The number was ${result}`;
@@ -229,7 +222,7 @@
                     return (lifes === 1) ? lifesQuantity.textContent = `Oh!, try again, you still have ${lifes} life` : lifesQuantity.textContent = `Oh!, try again, you still have ${lifes} lifes`;
                 } 
             }   
-        }
+        })();
     }
  
     // Reset values
