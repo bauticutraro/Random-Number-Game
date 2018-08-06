@@ -233,6 +233,7 @@
         inputMin.value = '';
         inputMax.value = '';
         inputResult.value = '';
+        failedAttempts = []
 
         textInterval.textContent = '';
         textMax.textContent = '';
