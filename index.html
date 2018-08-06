@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Random Number Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div class="title-container">
+        <h1 class="title">Random Number Game</h1>
+        <div class="title-text">
+            <div class="text-lifes-difficulty">
+                <span class="lifes" id="lifesText"></span> <!-- Lifes: 3 -->
+                <span class="difficulty" id="difficultyText">Difficulty: -</span> <!-- Difficulty: - -->
+            </div>
+            <span class="probability" id="probabilityText">Probability of Winning: -</span>    
+            
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-2">
+            <div class="inputs">
+    
+                <!-- Inputs Limits -->
+                <div class="inputs-containers inputs-limits">
+    
+                    <!-- Min label -->
+                    <label class="label label--min">
+                        <div class="input-button">
+                            <input type="number" class="input input--min" id="inputMin">
+                        </div>
+                        <span class="text text--min">Min Result</span>
+                        <span class="text-max-error" id="textMin"></span>
+                    </label>
+    
+                    <!-- Max label -->
+                    <label class="label label--max">
+                        <div class="input-button">
+                            <input type="number" class="input input--max" id="inputMax">
+                            <!-- Button reset max and min values -->
+                            <button class="button button--reset" id="buttonReset">New Interval</button>
+                        </div>
+                        <span class="text text--max">Max Result</span>
+                        <span class="text-max-error" id="textMax"></span>
+                        
+                    </label>
+    
+                    <span class="text-interval-error" id="textInterval"></span>
+    
+                </div>
+    
+                <!-- Inputs Results -->
+                <div class="inputs-containers inputs-results">
+    
+                    <!-- Result label -->
+                    <label class="label label--result">
+                        <div class="input-button">
+                            <input type="number" class="input input--result" id="inputResult">
+                            <!-- Button test -->
+                            <button class="button button--result" id="buttonResult">Try!</button>
+                        </div>
+                        <span class="text text--result">Your Number</span>
+                        <span class="text-result-error" id="textResult"></span>
+
+                    </label>
+    
+                    
+                </div>
+                    <div class="text-lifes-result">
+                        <span class="game-result" id="gameResult"></span> <!-- Victory / Game Over -->
+                        <span class="text-cant-lifes" id="lifesQuantity"></span> <!-- Oh!, try again, you still have 1/2 life/s -->
+                        <span class="number-result" id="numberResult"></span> <!-- The number was ... -->
+                        <button class="button-new-game" id="buttonNewGame">New Game</button> <!-- Button New Game -->
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

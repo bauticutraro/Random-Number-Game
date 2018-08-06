@@ -1,0 +1,16 @@
+body {
+    background-color: #f2f2f2;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 100vh;
+    align-items: center;
+}
+
+.input:disabled,
+.button:disabled  {
+    opacity: .7;
+    background-color: #fff;
+    cursor: not-allowed !important;
+}

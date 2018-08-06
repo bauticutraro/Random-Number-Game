@@ -1,0 +1,67 @@
+.title-container {
+    width: 100%;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    position: relative;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.title-text {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.text-lifes-difficulty {
+    margin-bottom: 1rem;
+}
+
+.title {
+    font-size: 2.7rem;
+    font-family: 'Gloria Hallelujah', cursive;
+    color: $primary2;
+    transition: all .3s ease;
+    margin-bottom: 1.5rem;
+    width: 85%;
+}
+
+.lifes {
+    font-size: 1.7rem;
+    margin-right: .5rem;
+}
+
+.difficulty {
+    font-size: 1.5rem;
+    margin-left: .5rem;
+
+}
+
+@media screen and (max-width: 570px) {
+    .title-container {
+        margin-top: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .title {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 330px) {
+    .title-container {
+       margin-top: 1.5rem;
+    }
+    .title {
+        font-size: 1.8rem;
+    }
+}

@@ -1,0 +1,48 @@
+.text-lifes-result {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 85vw;
+
+    * {
+        text-align: center;
+    }
+}
+
+.game-result {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-weight: 900;
+    color: $danger;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.number-result {
+    margin-bottom: 1.5rem;
+}
+
+.button-new-game {
+    padding: .3rem .5rem;
+    width: 8rem;
+    cursor: pointer;
+    color: $white;
+    border: 1px solid $info;
+    background-color: $info;
+    border-radius: .2rem;
+    outline: 0;
+    transition: all .3s ease;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem;
+    display: none;
+
+    &:active {
+        transform: scale(.9);
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .button-new-game {
+        width: calc(85vw - 1rem);
+    }
+}
